@@ -6,7 +6,7 @@ async function deriveKey(password: string, salt: Uint8Array): Promise<CryptoKey>
   const enc = new TextEncoder();
   const keyMaterial = await crypto.subtle.importKey(
     'raw',
-    enc.encode(password),
+    enc.encode(password) as BufferSource,
     'PBKDF2',
     false,
     ['deriveKey']
