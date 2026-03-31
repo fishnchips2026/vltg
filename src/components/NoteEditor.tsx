@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { Pin, Trash2, Tag, Shield, Zap } from 'lucide-react';
+import { Pin, Trash2, Tag, Shield, Zap, Eye, PenLine } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Note, NOTE_TAGS } from '@/hooks/useNotes';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
