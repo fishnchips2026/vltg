@@ -72,6 +72,15 @@ export function NoteEditor({ note, onUpdate, onDelete }: NoteEditorProps) {
         </div>
 
         <div className="ml-auto flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn('h-8 w-8', preview ? 'text-primary' : 'text-muted-foreground hover:text-foreground')}
+            onClick={() => setPreview(!preview)}
+            title={preview ? 'Edit' : 'Preview'}
+          >
+            {preview ? <PenLine className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+          </Button>
           <div className="relative">
             <Button
               variant="ghost"
