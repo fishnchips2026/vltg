@@ -24,6 +24,7 @@ export function NoteEditor({ note, onUpdate, onDelete }: NoteEditorProps) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [showTagPicker, setShowTagPicker] = useState(false);
+  const [preview, setPreview] = useState(false);
   const contentRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
