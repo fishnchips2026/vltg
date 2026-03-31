@@ -118,10 +118,17 @@ export function NoteSidebar({
       </div>
 
       {/* Footer */}
-      <div className="p-3 border-t border-border">
-        <p className="text-[10px] font-mono text-muted-foreground text-center tracking-wider uppercase">
-          ⚡ {notes.length} notes · Zero telemetry
+      <div className="p-3 border-t border-border flex items-center justify-between">
+        <p className="text-[10px] font-mono text-muted-foreground tracking-wider uppercase">
+          ⚡ {notes.length} notes
         </p>
+        <button
+          onClick={onBackupRestore}
+          className="text-muted-foreground hover:text-primary transition-colors"
+          title="Backup & Restore"
+        >
+          <HardDrive className="w-3.5 h-3.5" />
+        </button>
       </div>
     </div>
   );
