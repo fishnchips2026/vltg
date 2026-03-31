@@ -1,4 +1,4 @@
-import { Plus, Pin, Shield, Zap } from 'lucide-react';
+import { Plus, Pin, Shield, Zap, HardDrive } from 'lucide-react';
 import { Note, NOTE_TAGS } from '@/hooks/useNotes';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
