@@ -28,6 +28,7 @@ export function NoteSidebar({
   onCreateNote,
   filterTag,
   onFilterTag,
+  onBackupRestore,
 }: NoteSidebarProps) {
   return (
     <div className="w-72 h-full flex flex-col border-r border-border bg-sidebar">
