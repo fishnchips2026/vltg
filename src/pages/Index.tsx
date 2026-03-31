@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { NoteSidebar } from '@/components/NoteSidebar';
 import { NoteEditor } from '@/components/NoteEditor';
+import { ExportImportDialog } from '@/components/ExportImportDialog';
 import { useNotes } from '@/hooks/useNotes';
 
 const Index = () => {
@@ -13,7 +15,11 @@ const Index = () => {
     deleteNote,
     filterTag,
     setFilterTag,
+    exportNotes,
+    importNotes,
   } = useNotes();
+
+  const [backupOpen, setBackupOpen] = useState(false);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -24,11 +30,18 @@ const Index = () => {
         onCreateNote={createNote}
         filterTag={filterTag}
         onFilterTag={setFilterTag}
+        onBackupRestore={() => setBackupOpen(true)}
       />
       <NoteEditor
         note={activeNote}
         onUpdate={updateNote}
         onDelete={deleteNote}
+      />
+      <ExportImportDialog
+        open={backupOpen}
+        onClose={() => setBackupOpen(false)}
+        onExport={exportNotes}
+        onImport={importNotes}
       />
     </div>
   );
