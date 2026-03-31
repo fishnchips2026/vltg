@@ -45,9 +45,9 @@ export async function decryptData(encoded: string, password: string): Promise<st
   const ciphertext = combined.slice(SALT_LENGTH + IV_LENGTH);
   const key = await deriveKey(password, salt);
   const decrypted = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv },
+    { name: 'AES-GCM', iv: iv as BufferSource },
     key,
-    ciphertext
+    ciphertext as BufferSource
   );
   return new TextDecoder().decode(decrypted);
 }
