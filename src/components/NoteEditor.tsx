@@ -155,7 +155,7 @@ export function NoteEditor({ note, onUpdate, onDelete }: NoteEditorProps) {
       </div>
 
       {/* Status bar */}
-      <div className="px-6 py-2 border-t border-border flex items-center gap-4">
+      <div className="px-3 sm:px-6 py-2 border-t border-border flex items-center gap-4">
         <span className="text-[10px] font-mono text-muted-foreground">
           {content.length} chars · {content.split(/\s+/).filter(Boolean).length} words
         </span>
