@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { Pin, Trash2, Tag, Shield, Zap } from 'lucide-react';
+import { Pin, Trash2, Tag, Shield, Zap, Eye, PenLine } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Note, NOTE_TAGS } from '@/hooks/useNotes';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -22,6 +24,7 @@ export function NoteEditor({ note, onUpdate, onDelete }: NoteEditorProps) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [showTagPicker, setShowTagPicker] = useState(false);
+  const [preview, setPreview] = useState(false);
   const contentRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -69,6 +72,15 @@ export function NoteEditor({ note, onUpdate, onDelete }: NoteEditorProps) {
         </div>
 
         <div className="ml-auto flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn('h-8 w-8', preview ? 'text-primary' : 'text-muted-foreground hover:text-foreground')}
+            onClick={() => setPreview(!preview)}
+            title={preview ? 'Edit' : 'Preview'}
+          >
+            {preview ? <PenLine className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+          </Button>
           <div className="relative">
             <Button
               variant="ghost"
@@ -127,13 +139,19 @@ export function NoteEditor({ note, onUpdate, onDelete }: NoteEditorProps) {
           placeholder="Untitled"
           className="w-full bg-transparent font-heading text-2xl font-bold text-foreground outline-none placeholder:text-muted-foreground/40 mb-4"
         />
-        <textarea
-          ref={contentRef}
-          value={content}
-          onChange={e => setContent(e.target.value)}
-          placeholder="Start writing..."
-          className="w-full bg-transparent font-mono text-sm text-foreground/80 outline-none resize-none min-h-[60vh] leading-relaxed placeholder:text-muted-foreground/30"
-        />
+        {preview ? (
+          <div className="prose-vltg font-mono text-sm text-foreground/80 leading-relaxed">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+          </div>
+        ) : (
+          <textarea
+            ref={contentRef}
+            value={content}
+            onChange={e => setContent(e.target.value)}
+            placeholder="Start writing... (supports **markdown**)"
+            className="w-full bg-transparent font-mono text-sm text-foreground/80 outline-none resize-none min-h-[60vh] leading-relaxed placeholder:text-muted-foreground/30"
+          />
+        )}
       </div>
 
       {/* Status bar */}
