@@ -65,7 +65,7 @@ export function NoteEditor({ note, onUpdate, onDelete }: NoteEditorProps) {
   return (
     <div className="flex-1 flex flex-col bg-background">
       {/* Toolbar */}
-      <div className="flex items-center gap-2 px-6 py-3 border-b border-border bg-surface-1/50">
+      <div className="flex items-center gap-2 px-3 sm:px-6 py-3 border-b border-border bg-surface-1/50">
         <div className="flex items-center gap-1.5 text-muted-foreground">
           <Shield className="w-3.5 h-3.5 text-primary/60" />
           <span className="text-[10px] font-mono uppercase tracking-widest">Offline · Private</span>
