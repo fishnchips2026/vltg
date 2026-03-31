@@ -31,7 +31,7 @@ export function NoteSidebar({
   onBackupRestore,
 }: NoteSidebarProps) {
   return (
-    <div className="w-72 h-full flex flex-col border-r border-border bg-sidebar">
+    <div className="w-72 h-full flex flex-col border-r border-border bg-sidebar overflow-hidden">
       {/* Header */}
       <div className="p-4 border-b border-border">
         <div className="flex items-center gap-2 mb-4">
