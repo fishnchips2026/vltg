@@ -26,9 +26,9 @@ export async function encryptData(data: string, password: string): Promise<strin
   const key = await deriveKey(password, salt);
   const enc = new TextEncoder();
   const ciphertext = await crypto.subtle.encrypt(
-    { name: 'AES-GCM', iv },
+    { name: 'AES-GCM', iv: iv as BufferSource },
     key,
-    enc.encode(data)
+    enc.encode(data) as BufferSource
   );
   // Combine salt + iv + ciphertext into a single base64 string
   const combined = new Uint8Array(salt.length + iv.length + new Uint8Array(ciphertext).length);
