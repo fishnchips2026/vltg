@@ -132,7 +132,7 @@ export function NoteEditor({ note, onUpdate, onDelete }: NoteEditorProps) {
       </div>
 
       {/* Editor */}
-      <div className="flex-1 overflow-y-auto px-6 py-6 max-w-3xl w-full mx-auto">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-6 max-w-3xl w-full mx-auto">
         <input
           value={title}
           onChange={e => setTitle(e.target.value)}
