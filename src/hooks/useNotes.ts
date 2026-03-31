@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { encryptData, decryptData } from '@/lib/crypto';
 
 export interface Note {
   id: string;
