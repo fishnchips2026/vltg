@@ -11,6 +11,7 @@ interface NoteSidebarProps {
   onCreateNote: () => void;
   filterTag: string | null;
   onFilterTag: (tag: string | null) => void;
+  onBackupRestore: () => void;
 }
 
 const tagColors: Record<string, string> = {
