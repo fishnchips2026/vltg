@@ -101,6 +101,32 @@ export function useNotes() {
     persist(updated);
   }, [notes, activeNoteId, persist]);
 
+  const exportNotes = useCallback(async (password: string) => {
+    const json = JSON.stringify(notes);
+    const encrypted = await encryptData(json, password);
+    const blob = new Blob([encrypted], { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `vltg-backup-${new Date().toISOString().slice(0, 10)}.vltg`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [notes]);
+
+  const importNotes = useCallback(async (file: File, password: string) => {
+    const text = await file.text();
+    const json = await decryptData(text, password);
+    const parsed = JSON.parse(json);
+    const restored: Note[] = parsed.map((n: any) => ({
+      ...n,
+      createdAt: new Date(n.createdAt),
+      updatedAt: new Date(n.updatedAt),
+    }));
+    setNotes(restored);
+    setActiveNoteId(restored[0]?.id ?? null);
+    persist(restored);
+  }, [persist]);
+
   return {
     notes: sortedNotes,
     activeNote,
@@ -111,5 +137,7 @@ export function useNotes() {
     deleteNote,
     filterTag,
     setFilterTag,
+    exportNotes,
+    importNotes,
   };
 }
