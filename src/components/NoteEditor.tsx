@@ -139,13 +139,19 @@ export function NoteEditor({ note, onUpdate, onDelete }: NoteEditorProps) {
           placeholder="Untitled"
           className="w-full bg-transparent font-heading text-2xl font-bold text-foreground outline-none placeholder:text-muted-foreground/40 mb-4"
         />
-        <textarea
-          ref={contentRef}
-          value={content}
-          onChange={e => setContent(e.target.value)}
-          placeholder="Start writing..."
-          className="w-full bg-transparent font-mono text-sm text-foreground/80 outline-none resize-none min-h-[60vh] leading-relaxed placeholder:text-muted-foreground/30"
-        />
+        {preview ? (
+          <div className="prose-vltg font-mono text-sm text-foreground/80 leading-relaxed">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+          </div>
+        ) : (
+          <textarea
+            ref={contentRef}
+            value={content}
+            onChange={e => setContent(e.target.value)}
+            placeholder="Start writing... (supports **markdown**)"
+            className="w-full bg-transparent font-mono text-sm text-foreground/80 outline-none resize-none min-h-[60vh] leading-relaxed placeholder:text-muted-foreground/30"
+          />
+        )}
       </div>
 
       {/* Status bar */}
