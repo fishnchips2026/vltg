@@ -11,6 +11,8 @@ interface NoteSidebarProps {
   onCreateNote: () => void;
   filterTag: string | null;
   onFilterTag: (tag: string | null) => void;
+  searchQuery: string;
+  onSearchQuery: (q: string) => void;
   onBackupRestore: () => void;
 }
 
