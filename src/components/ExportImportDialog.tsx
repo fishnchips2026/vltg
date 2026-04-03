@@ -11,7 +11,7 @@ interface ExportImportDialogProps {
   open: boolean;
   onClose: () => void;
   onExport: (password: string) => Promise<void>;
-  onImport: (file: File, password: string) => Promise<void>;
+  onImport: (file: File, password: string, merge?: boolean) => Promise<void>;
 }
 
 export function ExportImportDialog({ open, onClose, onExport, onImport }: ExportImportDialogProps) {
