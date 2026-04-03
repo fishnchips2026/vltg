@@ -53,6 +53,7 @@ export function useNotes() {
   });
   const [activeNoteId, setActiveNoteId] = useState<string | null>(notes[0]?.id ?? null);
   const [filterTag, setFilterTag] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const persist = useCallback((updated: Note[]) => {
     localStorage.setItem('vltg-notes', JSON.stringify(updated));
