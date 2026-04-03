@@ -1,4 +1,4 @@
-import { Plus, Pin, Shield, Zap, HardDrive } from 'lucide-react';
+import { Plus, Pin, Shield, Zap, HardDrive, Search, X } from 'lucide-react';
 import { Note, NOTE_TAGS } from '@/hooks/useNotes';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -11,6 +11,8 @@ interface NoteSidebarProps {
   onCreateNote: () => void;
   filterTag: string | null;
   onFilterTag: (tag: string | null) => void;
+  searchQuery: string;
+  onSearchQuery: (q: string) => void;
   onBackupRestore: () => void;
 }
 
@@ -28,6 +30,8 @@ export function NoteSidebar({
   onCreateNote,
   filterTag,
   onFilterTag,
+  searchQuery,
+  onSearchQuery,
   onBackupRestore,
 }: NoteSidebarProps) {
   return (
@@ -49,6 +53,28 @@ export function NoteSidebar({
           <Plus className="w-3.5 h-3.5" />
           New Note
         </Button>
+      </div>
+
+      {/* Search */}
+      <div className="px-4 py-2 border-b border-border">
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search notes..."
+            value={searchQuery}
+            onChange={e => onSearchQuery(e.target.value)}
+            className="w-full bg-surface-2 rounded-md pl-8 pr-8 py-1.5 text-xs font-mono text-foreground placeholder:text-muted-foreground/50 outline-none border border-border focus:border-primary/50 transition-colors"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => onSearchQuery('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Tag filters */}

@@ -19,6 +19,8 @@ const Index = () => {
     deleteNote,
     filterTag,
     setFilterTag,
+    searchQuery,
+    setSearchQuery,
     exportNotes,
     importNotes,
   } = useNotes();
@@ -40,6 +42,8 @@ const Index = () => {
       onCreateNote={createNote}
       filterTag={filterTag}
       onFilterTag={setFilterTag}
+      searchQuery={searchQuery}
+      onSearchQuery={setSearchQuery}
       onBackupRestore={() => setBackupOpen(true)}
     />
   );

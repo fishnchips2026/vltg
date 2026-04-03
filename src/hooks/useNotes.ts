@@ -53,6 +53,7 @@ export function useNotes() {
   });
   const [activeNoteId, setActiveNoteId] = useState<string | null>(notes[0]?.id ?? null);
   const [filterTag, setFilterTag] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const persist = useCallback((updated: Note[]) => {
     localStorage.setItem('vltg-notes', JSON.stringify(updated));
@@ -60,9 +61,12 @@ export function useNotes() {
 
   const activeNote = notes.find(n => n.id === activeNoteId) ?? null;
 
-  const filteredNotes = filterTag
-    ? notes.filter(n => n.tag === filterTag)
-    : notes;
+  const filteredNotes = notes.filter(n => {
+    const matchesTag = !filterTag || n.tag === filterTag;
+    const q = searchQuery.toLowerCase();
+    const matchesSearch = !q || n.title.toLowerCase().includes(q) || n.content.toLowerCase().includes(q);
+    return matchesTag && matchesSearch;
+  });
 
   const sortedNotes = [...filteredNotes].sort((a, b) => {
     if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
@@ -145,6 +149,8 @@ export function useNotes() {
     deleteNote,
     filterTag,
     setFilterTag,
+    searchQuery,
+    setSearchQuery,
     exportNotes,
     importNotes,
   };
