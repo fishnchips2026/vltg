@@ -72,11 +72,11 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
     setConfirmStep(true);
   };
 
-  const handleImportConfirmed = async () => {
+  const handleImportConfirmed = async (merge: boolean) => {
     setLoading(true);
     setError('');
     try {
-      await onImport(file!, password);
+      await onImport(file!, password, merge);
       handleClose();
     } catch {
       setConfirmStep(false);
