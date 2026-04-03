@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Download, Upload, Lock, X, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,6 +21,7 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  const [confirmStep, setConfirmStep] = useState(false);
 
   const reset = () => {
     setMode(null);
@@ -29,6 +30,7 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
     setError('');
     setFile(null);
     setLoading(false);
+    setConfirmStep(false);
   };
 
   const handleClose = () => {
@@ -57,7 +59,7 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
     }
   };
 
-  const handleImport = async () => {
+  const handleImportCheck = () => {
     if (!file) {
       setError('Select a file first');
       return;
@@ -66,12 +68,18 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
       setError('Enter the password used to encrypt the backup');
       return;
     }
+    setError('');
+    setConfirmStep(true);
+  };
+
+  const handleImportConfirmed = async () => {
     setLoading(true);
     setError('');
     try {
-      await onImport(file, password);
+      await onImport(file!, password);
       handleClose();
     } catch {
+      setConfirmStep(false);
       setError('Decryption failed — wrong password or corrupted file');
     } finally {
       setLoading(false);
@@ -167,7 +175,7 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
             </div>
           )}
 
-          {mode === 'import' && (
+          {mode === 'import' && !confirmStep && (
             <div className="flex flex-col gap-3">
               <p className="text-xs font-mono text-muted-foreground">
                 Select your encrypted backup file and enter the password.
@@ -209,16 +217,42 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
                   variant="energy"
                   size="sm"
                   className="font-mono text-xs flex-1"
-                  onClick={handleImport}
-                  disabled={loading}
+                  onClick={handleImportCheck}
                 >
-                  {loading ? 'Decrypting...' : 'Restore Notes'}
+                  Restore Notes
                 </Button>
               </div>
-              <p className="text-[10px] font-mono text-destructive/70 flex items-center gap-1">
-                <AlertTriangle className="w-3 h-3" />
-                This will replace all current notes
+            </div>
+          )}
+
+          {mode === 'import' && confirmStep && (
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-2 text-destructive">
+                <AlertTriangle className="w-4 h-4" />
+                <p className="text-sm font-heading font-semibold">Are you sure?</p>
+              </div>
+              <p className="text-xs font-mono text-muted-foreground">
+                This will permanently replace all your current notes with the backup. This action cannot be undone.
               </p>
+              {error && (
+                <p className="text-xs font-mono text-destructive flex items-center gap-1.5">
+                  <AlertTriangle className="w-3 h-3" /> {error}
+                </p>
+              )}
+              <div className="flex gap-2 mt-1">
+                <Button variant="stealth" size="sm" className="font-mono text-xs" onClick={() => setConfirmStep(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  variant="energy"
+                  size="sm"
+                  className="font-mono text-xs flex-1 bg-destructive hover:bg-destructive/90"
+                  onClick={handleImportConfirmed}
+                  disabled={loading}
+                >
+                  {loading ? 'Decrypting...' : 'Yes, replace all notes'}
+                </Button>
+              </div>
             </div>
           )}
         </div>
