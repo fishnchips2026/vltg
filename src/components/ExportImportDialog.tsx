@@ -21,6 +21,7 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [file, setFile] = useState<File | null>(null);
+  const [confirmStep, setConfirmStep] = useState(false);
 
   const reset = () => {
     setMode(null);
