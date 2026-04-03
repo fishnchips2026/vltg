@@ -30,6 +30,8 @@ export function NoteSidebar({
   onCreateNote,
   filterTag,
   onFilterTag,
+  searchQuery,
+  onSearchQuery,
   onBackupRestore,
 }: NoteSidebarProps) {
   return (
