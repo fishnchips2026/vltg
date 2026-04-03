@@ -263,7 +263,7 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
                 </Button>
               </div>
             </div>
-        </div>
+          )}
         </div>
       </motion.div>
     </div>
