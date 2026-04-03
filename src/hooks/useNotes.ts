@@ -61,9 +61,12 @@ export function useNotes() {
 
   const activeNote = notes.find(n => n.id === activeNoteId) ?? null;
 
-  const filteredNotes = filterTag
-    ? notes.filter(n => n.tag === filterTag)
-    : notes;
+  const filteredNotes = notes.filter(n => {
+    const matchesTag = !filterTag || n.tag === filterTag;
+    const q = searchQuery.toLowerCase();
+    const matchesSearch = !q || n.title.toLowerCase().includes(q) || n.content.toLowerCase().includes(q);
+    return matchesTag && matchesSearch;
+  });
 
   const sortedNotes = [...filteredNotes].sort((a, b) => {
     if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
