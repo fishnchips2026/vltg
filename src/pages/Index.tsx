@@ -19,6 +19,8 @@ const Index = () => {
     deleteNote,
     filterTag,
     setFilterTag,
+    searchQuery,
+    setSearchQuery,
     exportNotes,
     importNotes,
   } = useNotes();
