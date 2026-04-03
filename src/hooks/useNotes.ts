@@ -113,7 +113,7 @@ export function useNotes() {
     URL.revokeObjectURL(url);
   }, [notes]);
 
-  const importNotes = useCallback(async (file: File, password: string) => {
+  const importNotes = useCallback(async (file: File, password: string, merge = false) => {
     const text = await file.text();
     const json = await decryptData(text, password);
     const parsed = JSON.parse(json);
@@ -122,10 +122,18 @@ export function useNotes() {
       createdAt: new Date(n.createdAt),
       updatedAt: new Date(n.updatedAt),
     }));
-    setNotes(restored);
-    setActiveNoteId(restored[0]?.id ?? null);
-    persist(restored);
-  }, [persist]);
+    if (merge) {
+      const existingIds = new Set(notes.map(n => n.id));
+      const newNotes = restored.filter(n => !existingIds.has(n.id));
+      const merged = [...notes, ...newNotes];
+      setNotes(merged);
+      persist(merged);
+    } else {
+      setNotes(restored);
+      setActiveNoteId(restored[0]?.id ?? null);
+      persist(restored);
+    }
+  }, [notes, persist]);
 
   return {
     notes: sortedNotes,

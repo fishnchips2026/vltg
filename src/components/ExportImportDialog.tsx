@@ -11,7 +11,7 @@ interface ExportImportDialogProps {
   open: boolean;
   onClose: () => void;
   onExport: (password: string) => Promise<void>;
-  onImport: (file: File, password: string) => Promise<void>;
+  onImport: (file: File, password: string, merge?: boolean) => Promise<void>;
 }
 
 export function ExportImportDialog({ open, onClose, onExport, onImport }: ExportImportDialogProps) {
@@ -72,11 +72,11 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
     setConfirmStep(true);
   };
 
-  const handleImportConfirmed = async () => {
+  const handleImportConfirmed = async (merge: boolean) => {
     setLoading(true);
     setError('');
     try {
-      await onImport(file!, password);
+      await onImport(file!, password, merge);
       handleClose();
     } catch {
       setConfirmStep(false);
@@ -229,28 +229,37 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2 text-destructive">
                 <AlertTriangle className="w-4 h-4" />
-                <p className="text-sm font-heading font-semibold">Are you sure?</p>
+                <p className="text-sm font-heading font-semibold">How should we import?</p>
               </div>
               <p className="text-xs font-mono text-muted-foreground">
-                This will permanently replace all your current notes with the backup. This action cannot be undone.
+                Choose whether to merge new notes with your existing ones or replace everything.
               </p>
               {error && (
                 <p className="text-xs font-mono text-destructive flex items-center gap-1.5">
                   <AlertTriangle className="w-3 h-3" /> {error}
                 </p>
               )}
-              <div className="flex gap-2 mt-1">
-                <Button variant="stealth" size="sm" className="font-mono text-xs" onClick={() => setConfirmStep(false)}>
-                  Cancel
-                </Button>
+              <div className="flex flex-col gap-2 mt-1">
                 <Button
                   variant="energy"
                   size="sm"
-                  className="font-mono text-xs flex-1 bg-destructive hover:bg-destructive/90"
-                  onClick={handleImportConfirmed}
+                  className="font-mono text-xs w-full"
+                  onClick={() => handleImportConfirmed(true)}
                   disabled={loading}
                 >
-                  {loading ? 'Decrypting...' : 'Yes, replace all notes'}
+                  {loading ? 'Importing...' : 'Merge — keep existing + add new'}
+                </Button>
+                <Button
+                  variant="stealth"
+                  size="sm"
+                  className="font-mono text-xs w-full text-destructive hover:text-destructive"
+                  onClick={() => handleImportConfirmed(false)}
+                  disabled={loading}
+                >
+                  Replace all — overwrite current notes
+                </Button>
+                <Button variant="ghost" size="sm" className="font-mono text-xs" onClick={() => setConfirmStep(false)}>
+                  Cancel
                 </Button>
               </div>
             </div>
