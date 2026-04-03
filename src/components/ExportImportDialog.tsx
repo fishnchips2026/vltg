@@ -59,7 +59,7 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
     }
   };
 
-  const handleImport = async () => {
+  const handleImportCheck = () => {
     if (!file) {
       setError('Select a file first');
       return;
@@ -68,12 +68,18 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
       setError('Enter the password used to encrypt the backup');
       return;
     }
+    setError('');
+    setConfirmStep(true);
+  };
+
+  const handleImportConfirmed = async () => {
     setLoading(true);
     setError('');
     try {
-      await onImport(file, password);
+      await onImport(file!, password);
       handleClose();
     } catch {
+      setConfirmStep(false);
       setError('Decryption failed — wrong password or corrupted file');
     } finally {
       setLoading(false);
