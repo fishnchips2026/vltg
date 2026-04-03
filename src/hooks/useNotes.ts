@@ -104,7 +104,7 @@ export function useNotes() {
   const exportNotes = useCallback(async (password: string) => {
     const json = JSON.stringify(notes);
     const encrypted = await encryptData(json, password);
-    const blob = new Blob([encrypted], { type: 'application/octet-stream' });
+    const blob = new Blob([encrypted], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
