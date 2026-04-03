@@ -149,6 +149,8 @@ export function useNotes() {
     deleteNote,
     filterTag,
     setFilterTag,
+    searchQuery,
+    setSearchQuery,
     exportNotes,
     importNotes,
   };
