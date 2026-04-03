@@ -42,6 +42,8 @@ const Index = () => {
       onCreateNote={createNote}
       filterTag={filterTag}
       onFilterTag={setFilterTag}
+      searchQuery={searchQuery}
+      onSearchQuery={setSearchQuery}
       onBackupRestore={() => setBackupOpen(true)}
     />
   );
