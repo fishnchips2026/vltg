@@ -30,6 +30,7 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
     setError('');
     setFile(null);
     setLoading(false);
+    setConfirmStep(false);
   };
 
   const handleClose = () => {
