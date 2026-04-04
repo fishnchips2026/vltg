@@ -146,9 +146,9 @@ export function NoteSidebar({
       {/* Footer */}
       <div className="p-3 border-t border-border flex flex-col gap-2">
         <Button
-          variant="energy"
+          variant="outline"
           size="sm"
-          className="w-full font-mono text-xs gap-2"
+          className="w-full font-mono text-xs gap-2 bg-lime-500/15 border-lime-500/40 text-lime-400 hover:bg-lime-500/25 hover:text-lime-300 hover:border-lime-500/60"
           onClick={onBackupRestore}
         >
           <HardDrive className="w-3.5 h-3.5" />
