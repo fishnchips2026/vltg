@@ -144,17 +144,19 @@ export function NoteSidebar({
       </div>
 
       {/* Footer */}
-      <div className="p-3 border-t border-border flex items-center justify-between">
-        <p className="text-[10px] font-mono text-muted-foreground tracking-wider uppercase">
-          ⚡ {notes.length} notes
-        </p>
-        <button
+      <div className="p-3 border-t border-border flex flex-col gap-2">
+        <Button
+          variant="energy"
+          size="sm"
+          className="w-full font-mono text-xs gap-2"
           onClick={onBackupRestore}
-          className="text-muted-foreground hover:text-primary transition-colors"
-          title="Backup & Restore"
         >
           <HardDrive className="w-3.5 h-3.5" />
-        </button>
+          Backup & Restore
+        </Button>
+        <p className="text-[10px] font-mono text-muted-foreground tracking-wider uppercase text-center">
+          ⚡ {notes.length} notes
+        </p>
       </div>
     </div>
   );
