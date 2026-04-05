@@ -10,7 +10,7 @@ type Mode = 'export' | 'import' | null;
 interface ExportImportDialogProps {
   open: boolean;
   onClose: () => void;
-  onExport: (password: string) => Promise<void>;
+  onExport: (password: string, filename?: string) => Promise<void>;
   onImport: (file: File, password: string, merge?: boolean) => Promise<void>;
 }
 
