@@ -10,7 +10,7 @@ type Mode = 'export' | 'import' | null;
 interface ExportImportDialogProps {
   open: boolean;
   onClose: () => void;
-  onExport: (password: string) => Promise<void>;
+  onExport: (password: string, filename?: string) => Promise<void>;
   onImport: (file: File, password: string, merge?: boolean) => Promise<void>;
 }
 
@@ -22,6 +22,7 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
   const [error, setError] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [confirmStep, setConfirmStep] = useState(false);
+  const [exportName, setExportName] = useState('');
 
   const reset = () => {
     setMode(null);
@@ -31,6 +32,7 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
     setFile(null);
     setLoading(false);
     setConfirmStep(false);
+    setExportName('');
   };
 
   const handleClose = () => {
@@ -50,7 +52,7 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
     setLoading(true);
     setError('');
     try {
-      await onExport(password);
+      await onExport(password, exportName.trim() || undefined);
       handleClose();
     } catch {
       setError('Export failed');
@@ -137,8 +139,15 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
           {mode === 'export' && (
             <div className="flex flex-col gap-3">
               <p className="text-xs font-mono text-muted-foreground">
-                Choose an encryption password. You'll need it to restore the backup.
+                Name your backup and choose an encryption password.
               </p>
+              <Input
+                type="text"
+                placeholder={`vltg-backup-${new Date().toISOString().slice(0, 10)}`}
+                value={exportName}
+                onChange={e => setExportName(e.target.value)}
+                className="font-mono text-sm bg-surface-2 border-border"
+              />
               <Input
                 type="password"
                 placeholder="Encryption password"
