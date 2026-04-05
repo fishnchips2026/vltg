@@ -105,10 +105,11 @@ export function useNotes() {
     persist(updated);
   }, [notes, activeNoteId, persist]);
 
-  const exportNotes = useCallback(async (password: string) => {
+  const exportNotes = useCallback(async (password: string, customName?: string) => {
     const json = JSON.stringify(notes);
     const encrypted = await encryptData(json, password);
-    const filename = `vltg-backup-${new Date().toISOString().slice(0, 10)}.vltg`;
+    const baseName = customName || `vltg-backup-${new Date().toISOString().slice(0, 10)}`;
+    const filename = baseName.endsWith('.vltg') ? baseName : `${baseName}.vltg`;
     const blob = new Blob([encrypted], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

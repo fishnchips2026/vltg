@@ -139,8 +139,15 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
           {mode === 'export' && (
             <div className="flex flex-col gap-3">
               <p className="text-xs font-mono text-muted-foreground">
-                Choose an encryption password. You'll need it to restore the backup.
+                Name your backup and choose an encryption password.
               </p>
+              <Input
+                type="text"
+                placeholder={`vltg-backup-${new Date().toISOString().slice(0, 10)}`}
+                value={exportName}
+                onChange={e => setExportName(e.target.value)}
+                className="font-mono text-sm bg-surface-2 border-border"
+              />
               <Input
                 type="password"
                 placeholder="Encryption password"
