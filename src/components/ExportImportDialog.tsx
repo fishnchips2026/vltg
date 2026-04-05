@@ -32,6 +32,7 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
     setFile(null);
     setLoading(false);
     setConfirmStep(false);
+    setExportName('');
   };
 
   const handleClose = () => {
