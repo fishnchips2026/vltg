@@ -192,7 +192,7 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
                 {file ? file.name : 'Choose .vltg file'}
                 <input
                   type="file"
-                  accept=".vltg,.json"
+                  accept=".vltg,.json,.txt"
                   className="hidden"
                   onChange={e => setFile(e.target.files?.[0] ?? null)}
                 />
