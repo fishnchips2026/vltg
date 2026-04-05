@@ -44,7 +44,7 @@ const Index = () => {
       onFilterTag={setFilterTag}
       searchQuery={searchQuery}
       onSearchQuery={setSearchQuery}
-      onBackupRestore={() => setBackupOpen(true)}
+      onBackupRestore={() => { setSidebarOpen(false); setBackupOpen(true); }}
     />
   );
 
