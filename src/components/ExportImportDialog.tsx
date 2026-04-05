@@ -52,7 +52,7 @@ export function ExportImportDialog({ open, onClose, onExport, onImport }: Export
     setLoading(true);
     setError('');
     try {
-      await onExport(password);
+      await onExport(password, exportName.trim() || undefined);
       handleClose();
     } catch {
       setError('Export failed');
