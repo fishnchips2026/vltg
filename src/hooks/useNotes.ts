@@ -36,6 +36,33 @@ const defaultNotes: Note[] = [
     pinned: false,
     tag: 'ideas',
   },
+  {
+    id: createId(),
+    title: 'Data Privacy Tips',
+    content: `🔒 Protect Your Digital Footprint\n\n1. Use unique, strong passwords for every account — a password manager helps\n2. Enable two-factor authentication (2FA) wherever possible\n3. Review app permissions regularly — revoke access you don't need\n4. Avoid sharing personal info on public forums or social media\n5. Use end-to-end encrypted messaging apps (Signal, WhatsApp)\n6. Regularly check haveibeenpwned.com for breached accounts\n7. Opt out of data broker sites that sell your info\n8. Read privacy policies — or at least check what data an app collects\n\nRemember: if a product is free, you're usually the product.`,
+    createdAt: new Date(Date.now() - 7200000),
+    updatedAt: new Date(Date.now() - 7200000),
+    pinned: false,
+    tag: 'personal',
+  },
+  {
+    id: createId(),
+    title: 'Android Security Essentials',
+    content: `🤖 Keep Your Android Device Secure\n\n• Only install apps from Google Play Store or trusted sources\n• Keep your OS and apps updated — patches fix known vulnerabilities\n• Use a screen lock (fingerprint, PIN, or pattern — avoid simple swipes)\n• Enable Google Play Protect to scan for harmful apps\n• Turn off Bluetooth and NFC when not in use\n• Encrypt your device (Settings → Security → Encryption)\n• Be cautious with app permissions — a flashlight app doesn't need your contacts\n• Use a VPN on untrusted networks\n• Disable USB debugging unless you're actively developing\n• Set up Find My Device in case your phone is lost or stolen\n\nBonus: Review your Google account security checkup at myaccount.google.com/security-checkup`,
+    createdAt: new Date(Date.now() - 10800000),
+    updatedAt: new Date(Date.now() - 10800000),
+    pinned: false,
+    tag: 'personal',
+  },
+  {
+    id: createId(),
+    title: 'Public Wi-Fi Survival Guide',
+    content: `📡 Stay Safe on Public Wi-Fi\n\nPublic networks (cafés, airports, hotels) are hunting grounds for attackers.\n\n⚠️ Risks:\n- Man-in-the-middle attacks — someone intercepts your traffic\n- Evil twin networks — fake hotspots mimicking legitimate ones\n- Packet sniffing — unencrypted data can be read by anyone nearby\n\n✅ Do:\n- Always use a VPN — it encrypts all your traffic\n- Verify the network name with staff before connecting\n- Use HTTPS-only sites (look for the padlock icon)\n- Forget the network after you're done\n- Turn off auto-connect to open networks\n\n❌ Don't:\n- Access banking or sensitive accounts without a VPN\n- Share files or enable AirDrop/Nearby Share\n- Stay connected longer than necessary\n- Trust captive portals with personal info\n\nPro tip: Use your phone's mobile hotspot instead when handling sensitive tasks.`,
+    createdAt: new Date(Date.now() - 14400000),
+    updatedAt: new Date(Date.now() - 14400000),
+    pinned: false,
+    tag: 'personal',
+  },
 ];
 
 export function useNotes() {
