@@ -110,13 +110,19 @@ export function useNotes() {
     const encrypted = await encryptData(json, password);
     const baseName = customName || `vltg-backup-${new Date().toISOString().slice(0, 10)}`;
     const filename = baseName.endsWith('.vltg') ? baseName : `${baseName}.vltg`;
-    const dataUrl = 'data:application/octet-stream;base64,' + btoa(unescape(encodeURIComponent(encrypted)));
+    const blob = new Blob([encrypted], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = dataUrl;
+    a.href = url;
     a.download = filename;
+    a.style.display = 'none';
     document.body.appendChild(a);
     a.click();
-    document.body.removeChild(a);
+    // Delay cleanup so the browser has time to start the download
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 1000);
   }, [notes]);
 
   const importNotes = useCallback(async (file: File, password: string, merge = false) => {
