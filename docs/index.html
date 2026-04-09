@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VLTG Notes — Private, Encrypted Note-Taking</title>
+  <meta name="description" content="Local-first, zero-trust encrypted note-taking app. No accounts, no servers, no telemetry. Your notes stay yours.">
+  <meta property="og:title" content="VLTG Notes">
+  <meta property="og:description" content="Private, encrypted notes that never leave your browser.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface-2: #1c2128;
+      --border: #30363d;
+      --text: #e6edf3;
+      --text-muted: #7d8590;
+      --primary: #4d8bff;
+      --accent: #d4ff00;
+      --accent-dim: #a3c700;
+      --destructive: #f85149;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--accent-dim); }
+
+    code, .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      background: rgba(13, 17, 23, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    nav .logo { font-weight: 700; font-size: 1.25rem; letter-spacing: -0.02em; }
+    nav .logo span { color: var(--accent); }
+    nav ul { list-style: none; display: flex; gap: 1.5rem; }
+    nav ul a { color: var(--text-muted); font-size: 0.9rem; font-weight: 500; }
+    nav ul a:hover { color: var(--text); }
+    .cta-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--bg);
+      padding: 0.5rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .cta-btn:hover {
+      color: var(--bg);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(212, 255, 0, 0.25);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 30%, rgba(77, 139, 255, 0.08), transparent),
+                  radial-gradient(ellipse 40% 40% at 30% 70%, rgba(212, 255, 0, 0.04), transparent);
+      pointer-events: none;
+    }
+    .hero .badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.35rem 1rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+    .hero .badge .dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      max-width: 700px;
+    }
+    .hero h1 .highlight { color: var(--accent); }
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+    .btn-outline {
+      display: inline-block;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--text-muted); background: var(--surface); color: var(--text); }
+
+    /* ── SECTIONS ── */
+    section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    section h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    section > p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin-bottom: 3rem;
+    }
+
+    /* ── FEATURE GRID ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+    .feature-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .feature-card .icon {
+      width: 40px; height: 40px;
+      background: rgba(212, 255, 0, 0.1);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+    }
+    .feature-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .feature-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+
+    /* ── CRYPTO SECTION ── */
+    .crypto-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    .crypto-flow {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+    }
+    .crypto-flow h3 { font-size: 1rem; font-weight: 600; margin-bottom: 1.25rem; }
+    .flow-step {
+      display: flex; align-items: flex-start; gap: 1rem;
+      margin-bottom: 1rem;
+      position: relative;
+      padding-left: 2.5rem;
+    }
+    .flow-step::before {
+      content: attr(data-step);
+      position: absolute; left: 0;
+      width: 28px; height: 28px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .flow-step .label { font-size: 0.9rem; font-weight: 500; }
+    .flow-step .desc { font-size: 0.8rem; color: var(--text-muted); }
+
+    .crypto-specs { display: flex; flex-direction: column; gap: 1rem; }
+    .spec-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .spec-item .key {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+    .spec-item .val { font-size: 0.9rem; }
+    .spec-item .note { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+    /* ── TECH STACK ── */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .tech-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .tech-item h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .tech-item p { color: var(--text-muted); font-size: 0.8rem; }
+
+    /* ── ARCH SECTION ── */
+    .arch-tree {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      color: var(--text-muted);
+      overflow-x: auto;
+    }
+    .arch-tree .dir { color: var(--primary); font-weight: 500; }
+    .arch-tree .file { color: var(--text); }
+    .arch-tree .comment { color: var(--text-muted); opacity: 0.6; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    footer .logo { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    footer .logo span { color: var(--accent); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav ul { display: none; }
+      .crypto-grid { grid-template-columns: 1fr; }
+      section { padding: 3rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">VLTG<span>.</span>notes</div>
+    <ul>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#security">Security</a></li>
+      <li><a href="#stack">Stack</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+    </ul>
+    <a href="https://vltg.lovable.app" class="cta-btn">Launch App →</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="badge"><span class="dot"></span> Local-first · Zero-trust · Open</div>
+    <h1>Your notes. <span class="highlight">Your device.</span> No exceptions.</h1>
+    <p>VLTG Notes is a private, offline-only notebook with AES-256-GCM encrypted backups. No accounts, no servers, no telemetry. Everything runs in your browser.</p>
+    <div class="hero-actions">
+      <a href="https://vltg.lovable.app" class="cta-btn">Open VLTG Notes</a>
+      <a href="https://github.com/user/vltg-notes" class="btn-outline">View on GitHub</a>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="section-label">// features</div>
+    <h2>Built for privacy-first workflows</h2>
+    <p>Every design decision prioritizes your data sovereignty. No compromises.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="icon">🔒</div>
+        <h3>AES-256-GCM Encrypted Exports</h3>
+        <p>Back up your notes as password-protected <code>.vltg</code> files. Uses PBKDF2 key derivation with 100,000 iterations and random salt/IV per export.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">✈️</div>
+        <h3>Fully Offline</h3>
+        <p>Zero network calls. No backend, no database, no CDN dependencies at runtime. The entire app runs client-side in your browser.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📝</div>
+        <h3>Markdown Editor</h3>
+        <p>Write in Markdown with live preview powered by <code>react-markdown</code> and <code>remark-gfm</code>. Tables, code blocks, and task lists supported.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🏷️</div>
+        <h3>Tag Organization</h3>
+        <p>Categorize notes as personal, work, ideas, or encrypted. Filter by tag and search across titles and content in real time.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📌</div>
+        <h3>Pin & Prioritize</h3>
+        <p>Pin important notes to keep them at the top. Pinned notes are always sorted first, then by last-modified date.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📱</div>
+        <h3>Responsive Design</h3>
+        <p>Full mobile support with a slide-out sidebar. Works seamlessly on desktop, tablet, and phone form factors.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECURITY -->
+  <section id="security">
+    <div class="section-label">// security</div>
+    <h2>Cryptography under the hood</h2>
+    <p>All encryption uses the native Web Crypto API — no third-party crypto libraries.</p>
+    <div class="crypto-grid">
+      <div class="crypto-flow">
+        <h3>Export Encryption Pipeline</h3>
+        <div class="flow-step" data-step="1">
+          <div><div class="label">Serialize</div><div class="desc">Notes → JSON plaintext</div></div>
+        </div>
+        <div class="flow-step" data-step="2">
+          <div><div class="label">Key Derivation</div><div class="desc">Password → PBKDF2-SHA256 → 256-bit key</div></div>
+        </div>
+        <div class="flow-step" data-step="3">
+          <div><div class="label">Encrypt</div><div class="desc">AES-256-GCM with random IV</div></div>
+        </div>
+        <div class="flow-step" data-step="4">
+          <div><div class="label">Encode</div><div class="desc">Base64 encode → .vltg file</div></div>
+        </div>
+      </div>
+      <div class="crypto-specs">
+        <div class="spec-item">
+          <div class="key">ALGORITHM</div>
+          <div class="val">AES-256-GCM</div>
+          <div class="note">Authenticated encryption — integrity + confidentiality in one pass</div>
+        </div>
+        <div class="spec-item">
+          <div class="key">KEY_DERIVATION</div>
+          <div class="val">PBKDF2 · SHA-256 · 100,000 iterations</div>
+          <div class="note">OWASP-recommended minimum for password stretching</div>
+        </div>
+        <div class="spec-item">
+          <div class="key">SALT</div>
+          <div class="val">16 bytes, cryptographically random per export</div>
+          <div class="note">Prevents rainbow table attacks</div>
+        </div>
+        <div class="spec-item">
+          <div class="key">IV / NONCE</div>
+          <div class="val">12 bytes, random per export</div>
+          <div class="note">GCM standard nonce length — never reused with same key</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH STACK -->
+  <section id="stack">
+    <div class="section-label">// tech stack</div>
+    <h2>Modern, minimal, fast</h2>
+    <p>Built with a focused set of production-grade tools.</p>
+    <div class="tech-grid">
+      <div class="tech-item">
+        <h4>React 18</h4>
+        <p>Component architecture with hooks-based state management</p>
+      </div>
+      <div class="tech-item">
+        <h4>TypeScript 5</h4>
+        <p>Full type safety across the entire codebase</p>
+      </div>
+      <div class="tech-item">
+        <h4>Vite 5</h4>
+        <p>Sub-second HMR, optimized production builds</p>
+      </div>
+      <div class="tech-item">
+        <h4>Tailwind CSS 3</h4>
+        <p>Utility-first styling with HSL design tokens</p>
+      </div>
+      <div class="tech-item">
+        <h4>shadcn/ui</h4>
+        <p>Radix primitives with accessible, themeable components</p>
+      </div>
+      <div class="tech-item">
+        <h4>Framer Motion</h4>
+        <p>Fluid animations and micro-interactions</p>
+      </div>
+      <div class="tech-item">
+        <h4>Web Crypto API</h4>
+        <p>Native browser encryption — zero dependencies</p>
+      </div>
+      <div class="tech-item">
+        <h4>Vitest + Playwright</h4>
+        <p>Unit and end-to-end test coverage</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARCHITECTURE -->
+  <section id="architecture">
+    <div class="section-label">// architecture</div>
+    <h2>Project structure</h2>
+    <p>Clean separation of concerns with minimal coupling between modules.</p>
+    <div class="arch-tree">
+<span class="dir">src/</span>
+├── <span class="dir">components/</span>
+│   ├── <span class="file">NoteEditor.tsx</span>        <span class="comment"># Markdown editor with live preview toggle</span>
+│   ├── <span class="file">NoteSidebar.tsx</span>       <span class="comment"># Note list, search, tags, navigation</span>
+│   ├── <span class="file">ExportImportDialog.tsx</span> <span class="comment"># Encrypted backup &amp; restore UI</span>
+│   └── <span class="dir">ui/</span>                    <span class="comment"># shadcn/ui component library</span>
+├── <span class="dir">hooks/</span>
+│   ├── <span class="file">useNotes.ts</span>            <span class="comment"># State management &amp; localStorage persistence</span>
+│   └── <span class="file">use-mobile.tsx</span>         <span class="comment"># Responsive breakpoint detection</span>
+├── <span class="dir">lib/</span>
+│   ├── <span class="file">crypto.ts</span>              <span class="comment"># AES-GCM encryption · PBKDF2 key derivation</span>
+│   └── <span class="file">utils.ts</span>               <span class="comment"># Tailwind merge utilities</span>
+├── <span class="dir">pages/</span>
+│   ├── <span class="file">Index.tsx</span>              <span class="comment"># Main app layout</span>
+│   └── <span class="file">NotFound.tsx</span>
+├── <span class="file">index.css</span>                  <span class="comment"># HSL design system tokens</span>
+└── <span class="file">main.tsx</span>                   <span class="comment"># App entry point</span>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="logo">VLTG<span>.</span>notes</div>
+    <p>Local-first. Zero-trust. No exceptions.</p>
+    <p style="margin-top: 1rem;">Built with conviction. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
