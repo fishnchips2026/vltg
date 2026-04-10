@@ -190,4 +190,8 @@ npx playwright test # E2E tests
 
 ## License
 
-Private project. All rights reserved.
+MIT License — see [LICENSE](LICENSE) for details.
+
+## Third-Party Notices
+
+This project uses open-source libraries. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for a full list of dependencies and their licenses.
